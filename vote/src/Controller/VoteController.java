@@ -1,6 +1,7 @@
 package Controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,7 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import DAO.VoteDAO;
+import Dao.VoteDao;
+
 
 /**
  * Servlet implementation class VoteController
@@ -65,34 +67,44 @@ public class VoteController extends HttpServlet {
 		System.out.println("conPath : " + conPath);
 		System.out.println("commandDo : " + commandDo);
 
-		VoteDAO vote = new VoteDAO();
-
-		if(commandDo.equals("vote/list.do"){
-			 command = new VoteListCommand();
-	         command.excuete(request, response);
-	         
-	         viewPage = "/vote_list.jsp";
-		}else if(commandDo.equals("vote/list.do"){
-			command = new VoteListCommand();
-	         command.excuete(request, response);
-	         
-	         viewPage = "/vote_list.jsp";
-		}else if(commandDo.equals("vote/list.do"){
-			command = new VoteListCommand();
-	         command.excuete(request, response);
-	         
-	         viewPage = "/vote_list.jsp";
-		}else if(commandDo.equals("vote/list.do"){
-			command = new VoteListCommand();
-	         command.excuete(request, response);
-	         
-	         viewPage = "/vote_list.jsp";
-		}else if(commandDo.equals("vote/list.do"){
-			command = new VoteListCommand();
-	         command.excuete(request, response);
-	         
-	         viewPage = "/vote_list.jsp";
+System.out.println("command : "+command);
+		
+		VoteDao vote = new VoteDao();
+		
+		switch(commandDo) {
+		case "/main.do" : 		
+			viewPage = "index.jsp";
+			break;
+		case "/memberList.do" : 			
+			viewPage = vote.selectMember(request, response);
+			break;
+		case "/voteMember.do" : 			
+			viewPage = "voteMember.jsp";
+			break;
+		case "/voteList.do" : 		
+			viewPage = vote.selectAll(request, response);
+			break;
+		case "/voteResult.do" : 			
+			viewPage = vote.selectResult(request, response);
+			break;
+		case "/vote.do" : 
+			int result = vote.insertVote(request, response);
+			response.setContentType("text/html; charset=UTF-8");
+			PrintWriter out=response.getWriter();
+			if(result == 1) {
+				out.println("<script>");
+				out.println("alert('투표하기 정보가 정상적으로 등록 되었습니다!'); location.href='"+conPath+"'; ");
+				out.println("</script>");
+				out.flush();
+			}else {
+				out.println("<script>");
+				out.println("alert('등록실패!'); location.href='"+conPath+"'; ");
+				out.println("</script>");
+				out.flush();
+			}		
+			break;
 		}
+		/* 결과 */
 		RequestDispatcher dispatcher = request.getRequestDispatcher(viewPage);
 		dispatcher.forward(request, response);
 	}
