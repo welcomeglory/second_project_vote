@@ -1,23 +1,18 @@
 package Dao;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
 import Dto.VoteMember;
 import Dto.VoteResult;
 import Dto.VoteDto;
-
 
 public class VoteDao {
 private DataSource dataSource = null;
@@ -31,7 +26,7 @@ private DataSource dataSource = null;
 			e.printStackTrace();
 		}
 	}
-	public List<VoteMember> list() {
+	public List<VoteMember> Mlist() {
 		List<VoteMember> vmems = new ArrayList<VoteMember>();
 
 		Connection conn = null;
@@ -90,60 +85,85 @@ private DataSource dataSource = null;
 				}
 		}			
 		return vmems;
+	}	
+	public List<VoteDto> Vlist() {
+		List<VoteDto> vdtos = new ArrayList<VoteDto>();
+
+		Connection conn = null;
+		PreparedStatement psmt = null;
+		ResultSet rs = null;
+		
+		try {
+			String sql = "SELECT v_name,  '19'||substr(v_jumin,1,2)|| '년'||substr(v_jumin,3,2)||'월'||substr(v_jumin,5,2)|| '일생' v_jumin, '만 '||(to_number(to_char(sysdate,'yyyy'))\r\n - to_number('19'||substr(v_jumin,1,2)))||'세' v_age, DECODE(substr(v_jumin,7,1),'1','남','여') v_gender, m_no, substr(v_time,1,2)||':'||substr(v_time,3,2) v_time, DECODE(v_confirm,'Y','확인','미확인') v_confirm  FROM tbl_vote_202005 WHERE v_area='제1투표장'";
+			conn = dataSource.getConnection();
+			psmt = conn.prepareStatement(sql);
+			rs = psmt.executeQuery();
+
+			while(rs.next()) {
+				String v_name = rs.getString("v_name");
+				String v_jumin = rs.getString("v_jumin");
+				String v_age = rs.getString("v_age");
+				String v_gender = rs.getString("v_gender");
+				String m_no = rs.getString("m_no");
+				String v_time = rs.getString("v_time");		
+				String v_confirm = rs.getString("v_confirm");		
+
+				VoteDto vdto = new  VoteDto(v_name,v_jumin,v_age, v_gender, m_no, v_time, v_confirm);
+				vdtos.add(vdto);				
+			}				
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(rs != null)
+					rs.close();
+				if(psmt != null)
+					psmt.close();
+				if(conn != null)
+					conn.close();				
+			} catch (Exception e2) {
+				e2.printStackTrace();
+				}
+		}			
+		return vdtos;
+	}	
+	public List<VoteResult> Vresult() {
+		List<VoteResult> vrs = new ArrayList<VoteResult>();
+
+		Connection conn = null;
+		PreparedStatement psmt = null;
+		ResultSet rs = null;
+		
+		try {
+			String sql = "SELECT M.m_no, M.m_name, count(*) AS v_total FROM tbl_member_202005 M, tbl_vote_202005 V WHERE M.m_no = V.m_no AND V.v_confirm = 'Y' GROUP BY M.m_no, M.m_name ORDER BY v_total DESC";
+			conn = dataSource.getConnection();
+			psmt = conn.prepareStatement(sql);
+			rs = psmt.executeQuery();
+
+			while(rs.next()) {
+				String m_no = rs.getString("m_no");
+				String m_name = rs.getString("m_name");
+				String v_total = rs.getString("v_total");
+				
+				VoteResult vr = new VoteResult(m_no,m_name,v_total);
+				vrs.add(vr);				
+			}				
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(rs != null)
+					rs.close();
+				if(psmt != null)
+					psmt.close();
+				if(conn != null)
+					conn.close();				
+			} catch (Exception e2) {
+				e2.printStackTrace();
+				}
+		}			
+		return vrs;
 	}
-//	public String selectMember(HttpServletRequest request, HttpServletResponse response) {
-//	  	
-//		ArrayList<VoteMember> list = new ArrayList<VoteMember>();
-//		
-//		Connection conn = null;
-//		PreparedStatement ps = null;
-//		ResultSet rs = null;
-//		
-//		try {
-//			conn = dataSource.getConnection();
-//			
-//			//후보 조회 화면 쿼리
-//			String sql = "SELECT ";
-//			       sql+= " M.m_no, ";
-//			       sql+= " M.m_name, ";
-//			       sql+= " P.p_name, ";
-//			       sql+= " DECODE(M.p_school,'1','고졸','2','학사','3','석사','박사') p_school, ";
-//			       sql+= " substr(M.m_jumin,1,6)|| ";
-//			       sql+= " '-'||substr(M.m_jumin,7) m_jumin, ";
-//			       sql+= " M.m_city, ";
-//			       sql+= " substr(P.p_tel1,1,2)||'-'||P.p_tel2||'-'||";
-//			       sql+= " (substr(P.p_tel3,4)||";
-//			       sql+= "  substr(P.p_tel3,4)||";
-//			       sql+= "  substr(P.p_tel3,4)||";
-//			       sql+= "  substr(P.p_tel3,4)) p_tel ";
-//			       sql+= " FROM tbl_member_202005 M, tbl_party_202005 P ";
-//			       sql+= " WHERE M.p_code = P.p_code";
-//			 ps = conn.prepareStatement(sql);
-//			 rs = ps.executeQuery();
-//			 
-//			 while(rs.next()) {
-//				 VoteMember member = new VoteMember();
-//				 member.setM_no(rs.getString(1));
-//				 member.setM_name(rs.getString(2));
-//				 member.setP_name(rs.getString(3));
-//				 member.setP_school(rs.getString(4));
-//				 member.setM_jumin(rs.getString(5));
-//				 member.setM_city(rs.getString(6));
-//				 member.setP_tel(rs.getString(7));
-//				 
-//				 list.add(member);
-//			 }
-//			 request.setAttribute("list",list);
-//				conn.close();
-//				ps.close();
-//				rs.close();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		
-//		return "memberList.jsp";
-//	}
-	
 //	public String selectAll(HttpServletRequest request, HttpServletResponse response){
 //		 	
 //		ArrayList<VoteDto> list = new ArrayList<VoteDto>();
