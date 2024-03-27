@@ -1,15 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<%@ page import="java.util.*" %>
-<%@ page import="Dto.VoteResult" %>
-<%
-request.setCharacterEncoding("UTF-8");
-//list 불러오기
-ArrayList<VoteResult> list = new ArrayList<VoteResult>();
-list = (ArrayList<VoteResult>)request.getAttribute("list");
-%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>    
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,7 +9,7 @@ list = (ArrayList<VoteResult>)request.getAttribute("list");
 </head>
 <body>
 <header>
-	<h1>(과정평가형 정보처리산업기사)지역구의원투표 프로그램 ver 2024-03</h1>
+	<h1>지역구의원투표 프로그램 ver 2024-03</h1>
 </header>
 <nav>
 	<ul>
@@ -38,17 +29,13 @@ list = (ArrayList<VoteResult>)request.getAttribute("list");
 			<th>성명</th>
 			<th>총투표건수</th>
 		</tr>
-		<%
-		for(int i=0; i<list.size(); i++){
-		%>
-		<tr>
-			<td><%=list.get(i).getM_no()%></td>
-			<td><%=list.get(i).getM_name()%></td>
-			<td><%=list.get(i).getV_total() %></td>
+		<c:forEach var="vr" items="${vrs}">
+			<tr>
+			<td>${vr.m_no}</td>
+			<td>${vr.m_name}</td>
+			<td>${vr.v_total}</td>								
 		</tr>
-		<%
-		}
-		%>
+		</c:forEach>		
 	</table>
 </div>
 </section>

@@ -1,17 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<%@ page import="java.util.*" %>
-<%@ page import="Dto.VoteDto" %>
-
-<%
-request.setCharacterEncoding("UTF-8");
-//list 불러오기
-ArrayList<VoteDto> list = new ArrayList<VoteDto>();
-list = (ArrayList<VoteDto>)request.getAttribute("list");
-%>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>    
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,7 +10,7 @@ list = (ArrayList<VoteDto>)request.getAttribute("list");
 </head>
 <body>
 <header>
-	<h1>(과정평가형 정보처리산업기사)지역구의원투표 프로그램 ver 2024-03</h1>
+	<h1>지역구의원투표 프로그램 ver 2024-03</h1>
 </header>
 <nav>
 	<ul>
@@ -45,21 +34,17 @@ list = (ArrayList<VoteDto>)request.getAttribute("list");
 			<th>투표시간</th>
 			<th>유권자확인</th>
 		</tr>
-		<%
-		for(int i=0; i<list.size(); i++){
-		%>
-		<tr>
-			<td><%=list.get(i).getV_name() %></td>
-			<td><%=list.get(i).getV_jumin() %></td>
-			<td><%=list.get(i).getV_age() %></td>
-			<td><%=list.get(i).getV_gender() %></td>
-			<td><%=list.get(i).getM_no() %></td>
-			<td><%=list.get(i).getV_time() %></td>
-			<td><%=list.get(i).getV_confirm() %></td>
+		<c:forEach var="vdto" items="${vdtos}">
+			<tr>
+			<td>${vdto.v_name}</td>
+			<td>${vdto.v_jumin}</td>
+			<td>${vdto.v_age}</td>
+			<td>${vdto.v_gender}</td>
+			<td>${vdto.m_no}</td>
+			<td>${vdto.v_time}</td>	
+			<td>${vdto.v_confirm}</td>						
 		</tr>
-		<%
-		}
-		%>
+		</c:forEach>					
 	</table>
 </div>
 </section>
