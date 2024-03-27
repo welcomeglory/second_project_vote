@@ -1,22 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="java.util.*" %>
-<%@ page import="Dto.VoteMember" %>
-<%
-request.setCharacterEncoding("UTF-8");
-//list 불러오기
-ArrayList<VoteMember> list = new ArrayList<VoteMember>();
-list = (ArrayList<VoteMember>)request.getAttribute("list");
-%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="EUC-KR">
-<title>Insert title here</title>
+<meta charset="UTF-8">
+<title></title>
 <link rel="stylesheet" href="style.css?ver=1">
 </head>
 <header>
-	<h1>(과정평가형 정보처리산업기사)지역구의원투표 프로그램 ver 2024-03</h1>
+	<h1>지역구의원투표 프로그램 ver 2024-03</h1>
 </header>
 <nav>
 	<ul>
@@ -38,23 +31,19 @@ list = (ArrayList<VoteMember>)request.getAttribute("list");
 			<th>학력</th>
 			<th>주민번호</th>
 			<th>지역구</th>
-			<th>대표전화</th>
+			<th>대표전화</th>			
 		</tr>
-		<%
-		for(int i=0; i<list.size(); i++){
-		%>
-		<tr>
-			<td><%=list.get(i).getM_no()%></td>
-			<td><%=list.get(i).getM_name()%></td>
-			<td><%=list.get(i).getP_name()%></td>
-			<td><%=list.get(i).getP_school()%></td>
-			<td><%=list.get(i).getM_jumin()%></td>
-			<td><%=list.get(i).getM_city()%></td>
-			<td><%=list.get(i).getP_tel()%></td>
+		<c:forEach var="vmem" items="${vmems}">
+			<tr>
+			<td>${vmem.m_no}</td>
+			<td>${vmem.m_name}</td>
+			<td>${vmem.p_name}</td>
+			<td>${vmem.p_school}</td>
+			<td>${vmem.m_jumin}</td>
+			<td>${vmem.m_city}</td>	
+			<td>${vmem.p_tel}</td>						
 		</tr>
-		<%
-		}
-		%>
+		</c:forEach>
 	</table>
 </div>
 </section>
