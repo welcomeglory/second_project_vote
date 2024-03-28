@@ -5,21 +5,21 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import Command.VCommand;
 import Dao.VoteDao;
 import Dto.VoteDto;
-import Dto.VoteMember;
 
-public class VListCommand implements VCommand {
+public class VoteviewCommand implements VCommand {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) {
+		
+		String v_jumin = (String)request.getAttribute("v_jumin");
+		System.out.println("v_jumin"+v_jumin);	
 		VoteDao dao = new VoteDao();
-		List<VoteDto> vdtos = dao.Vlist();
-		System.out.println("VListCommand.do ..");		
+		List<VoteDto> vdtos = dao.voteView(v_jumin);
 		request.setAttribute("vdtos", vdtos);
 		System.out.println("vdtos"+vdtos);	
 
-		
 	}
+
 }

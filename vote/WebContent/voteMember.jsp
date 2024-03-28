@@ -1,15 +1,62 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"%>    
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>voteMember</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="style.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>    
+<script>
+function validateForm() {
+	let v_jumin = $("input[name='v_jumin']").val();
+	let v_name = $("input[name='v_name']").val();
+	let m_no = $("select[name='m_no']").val();
+	let v_time = $("input[name='v_time']").val();		
+	let v_area = $("input[name='v_area']").val();
+	let v_confirm = $("input[name='v_confirm']").val();
+
+	// 간단한 유효성 검사 예시
+	if(v_jumin == ""){
+		alert("주민번호를 입력하세요.");
+		return false;
+	}else if(v_name == ""){
+		alert("이름을 입력하세요.");
+		return false;
+	}else if(m_no == ""){
+		alert("투표번호를 입력하세요.");
+		return false;
+	}else if(v_time == ""){
+		alert("투표시간을 입력하세요.");
+		return false;
+	}else if(v_area == ""){
+		alert("투표장소를 입력하세요.");
+		return false;
+	}else if(v_confirm == "null"){
+		alert("유권자확인을 선택하세요.");
+		return false;
+	}			
+	
+	alert("회원등록이 완료되었습니다.");
+	return true; // 유효성 검사 통과
+}
+	$(document).ready(function() {
+		$(document).on("submit",$("#joinForm"),function(event){
+			if (!validateForm()) {
+				event.preventDefault();
+			}
+		});		
+	});
+
+	
+</script>
 </head>
 <body>
 <header>
-	<h1>(과정평가형 정보처리산업기사)지역구의원투표 프로그램 ver 2024-03</h1>
+	<h1>지역구의원투표 프로그램 ver 2024-03</h1>
 </header>
 <nav>
 	<ul>
@@ -22,7 +69,7 @@
 </nav>
 <section>
 <h2>∙ 투표하기 ∙</h2>
-<form name="frm" method="post" action="vote.do">
+<form id=" joinForm" name="frm" method="post" action="write.do">
 <div class="table">
 	<table>
 		<tr>
@@ -71,8 +118,8 @@
 		</tr>
 		<tr>
 			<td colspan="2" style="text-align:center">
-			<button class="btn" type="submit" onclick="fn_submit();return false;">투표하기</button>
-			<button class="btn" type="button" onclick="fn_reset()">다시하기</button>
+			<input type="submit" value="투표하기">
+			<button class="btn" type="reset" >다시하기</button>
 			</td>
 		</tr>
 	</table>

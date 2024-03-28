@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import Command.VCommand;
 import Command.VListCommand;
 import Command.VResultCommand;
+import Command.VoteCommand;
+import Command.VoteviewCommand;
 import Command.MListCommand;
 
 
@@ -64,17 +66,23 @@ public class VoteController extends HttpServlet {
 			command.execute(request,response);
 			System.out.println("voteResult.jsp ..");
 			viewPage = "voteResult.jsp";
+		}else if(com.contentEquals("/voteMember.do")) {
+			viewPage = "voteMember.jsp";
+		}else if(com.contentEquals("/write.do")) {
+			command = new VoteCommand();
+			command.execute(request,response);
+			System.out.println("write.do ..");
+			viewPage = "voteView.do";
+		}else if(com.contentEquals("/voteView.do")) {
+			command = new VoteviewCommand();
+			command.execute(request,response);
+			System.out.println("voteView.do ..");
+			viewPage = "voteView.jsp";
 		}
 		
-//		switch(command) {
-//		case "/main.do" : 		
-//			site = "index.jsp";
-//			break;
+		
 //		case "/memberList.do" : 			
 //			site = vote.selectMember(request, response);
-//			break;
-//		case "/voteMember.do" : 			
-//			site = "voteMember.jsp";
 //			break;
 //		case "/voteList.do" : 		
 //			site = vote.selectAll(request, response);
@@ -84,6 +92,7 @@ public class VoteController extends HttpServlet {
 //		case "/voteResult.do" : 			
 //			site = vote.selectResult(request, response);
 //			break;
+		
 //		case "/vote.do" : 
 //			int result = vote.insertVote(request, response);
 //			response.setContentType("text/html; charset=UTF-8");
