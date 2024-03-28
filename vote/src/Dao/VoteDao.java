@@ -94,7 +94,7 @@ private DataSource dataSource = null;
 		ResultSet rs = null;
 		
 		try {
-			String sql = "SELECT v_name,  '19'||substr(v_jumin,1,2)|| '년'||substr(v_jumin,3,2)||'월'||substr(v_jumin,5,2)|| '일생' v_jumin, '만 '||(to_number(to_char(sysdate,'yyyy'))\r\n - to_number('19'||substr(v_jumin,1,2)))||'세' v_age, DECODE(substr(v_jumin,7,1),'1','남','여') v_gender, m_no, substr(v_time,1,2)||':'||substr(v_time,3,2) v_time, DECODE(v_confirm,'Y','확인','미확인') v_confirm  FROM tbl_vote_202005 WHERE v_area='제1투표장'";
+			String sql = "SELECT v_name, '19'||substr(v_jumin,1,2)|| '년'||substr(v_jumin,3,2)||'월'||substr(v_jumin,5,2)|| '일생' v_jumin, '만 '||(to_number(to_char(sysdate,'yyyy')) - to_number('19'||substr(v_jumin,1,2)))||'세' v_age, DECODE(substr(v_jumin,7,1),'1','남','여') v_gender, m_no, substr(v_time,1,2)||':'||substr(v_time,3,2) v_time, DECODE(v_confirm,'Y','확인','미확인') v_confirm FROM tbl_vote_202403 WHERE v_area='제1투표장'";
 			conn = dataSource.getConnection();
 			psmt = conn.prepareStatement(sql);
 			rs = psmt.executeQuery();
@@ -135,7 +135,7 @@ private DataSource dataSource = null;
 		ResultSet rs = null;
 		
 		try {
-			String sql = "SELECT M.m_no, M.m_name, count(*) AS v_total FROM tbl_member_202005 M, tbl_vote_202005 V WHERE M.m_no = V.m_no AND V.v_confirm = 'Y' GROUP BY M.m_no, M.m_name ORDER BY v_total DESC";
+			String sql = "SELECT M.m_no, M.m_name, count(*) AS v_total FROM tbl_member_202403 M, tbl_vote_202403 V WHERE M.m_no = V.m_no AND V.v_confirm = 'Y' GROUP BY M.m_no, M.m_name ORDER BY v_total DESC";
 			conn = dataSource.getConnection();
 			psmt = conn.prepareStatement(sql);
 			rs = psmt.executeQuery();

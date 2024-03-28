@@ -6,6 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>voteResult</title>
+<link rel="stylesheet" href="style.css?ver=1">
 </head>
 <body>
 <header>
